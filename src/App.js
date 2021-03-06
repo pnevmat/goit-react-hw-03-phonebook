@@ -13,8 +13,9 @@ class PhoneBook extends Component {
   }
 
   componentDidMount() {
-    if (this.state.contacts.length === 0) {
-      const contacts = JSON.parse(localStorage.getItem('Contacts'));
+    const localStorageContacts = localStorage.getItem('Contacts');
+    if (this.state.contacts.length === 0 && localStorageContacts !== null) {
+      const contacts = JSON.parse(localStorageContacts);
       this.setState({contacts: contacts});
     };
   };
@@ -58,22 +59,31 @@ class PhoneBook extends Component {
     });
   };
 
+  contactsFinderHandler = () => {
+    if (this.state.filter !== '') {
+      const normalizedFilter = this.state.filter.toLowerCase();
+      const foundContacts = this.state.contacts.filter(contact => 
+        contact.name.toLowerCase().includes(normalizedFilter));
+      return foundContacts
+    };
+  };
+
   render() {
-    const normalizedFilter = this.state.filter.toLowerCase();
-    const foundContacts = this.state.contacts.filter(contact => 
-      contact.name.toLowerCase().includes(normalizedFilter));
+    const foundContacts = this.contactsFinderHandler();
+    console.log(this.state.contacts);
     return (
       <section className="section">
         <h1>Phone Book</h1>
         <ContactForm onSubmit={this.onStateUpdate}/>
         <h2>Contacts</h2>
         <Filter onChange={this.onSearchContacts}/>
-        <ContactList 
+        {this.state.contacts.length !== 0 &&
+          <ContactList 
           foundContacts={foundContacts }
           state={this.state.contacts}
           filter={this.state.filter}
           onDeleteContact={this.onDeleteContact}
-        />
+        />}
         
       </section>
     )

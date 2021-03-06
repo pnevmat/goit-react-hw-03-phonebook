@@ -26,10 +26,14 @@ const ContactList = (props) => (
   </ul>
 );
 
+ContactList.defaultProps = {
+  avatar: {}
+};
+
 ContactList.propTypes = {
   foundContacts: PropTypes.arrayOf(
-      PropTypes.object.isRequired
-  ).isRequired,
+      PropTypes.object
+  ),
   state: PropTypes.arrayOf(
     PropTypes.object.isRequired
   ).isRequired,
